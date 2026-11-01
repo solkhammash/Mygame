@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة شرف حماة الوطن - الترتيب العام</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --police-dark: #0f172a;
+            --police-navy: #1e293b;
+            --police-blue: #0284c7;
+            --police-accent: #38bdf8;
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #f97316;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #0f172a 0%, #1e293b 60%, #090d16 100%);
+            min-height: 100vh;
+            padding: 24px 16px;
+            color: var(--text-light);
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+        }
+
+        .stat-card .val {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--police-accent);
+        }
+
+        .stat-card .lbl {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding: 10px 0;
+        }
+
+        .podium-slot {
+            flex: 1;
+            max-width: 220px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            text-align: center;
+            padding: 18px 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .podium-slot.first {
+            order: 2;
+            border-color: var(--gold);
+            background: linear-gradient(180deg, #1e293b 0%, #283548 100%);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+            transform: translateY(-12px);
+        }
+
+        .podium-slot.second {
+            order: 1;
+            border-color: var(--silver);
+        }
+
+        .podium-slot.third {
+            order: 3;
+            border-color: var(--bronze);
+        }
+
+        .podium-crown {
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+        }
+
+        .podium-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .podium-score {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--police-accent);
+        }
+
+        .podium-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 6px;
+        }
+
+        .first .podium-badge { background: #fef3c7; color: #92400e; }
+        .second .podium-badge { background: #334155; color: #cbd5e1; }
+        .third .podium-badge { background: #ffedd5; color: #9a3412; }
+
+        .controls {
+            background: var(--card-bg);
+            padding: 14px 18px;
+            border-radius: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .search-box {
+            flex: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            background: #0f172a;
+            color: #ffffff;
+        }
+
+        .search-box input:focus {
+            border-color: var(--police-accent);
+        }
+
+        .btn-ctrl {
+            background: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: #0369a1;
+        }
+
+        .table-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        thead {
+            background: #0f172a;
+            color: var(--police-accent);
+        }
+
+        th {
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            font-size: 1.02rem;
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        tbody tr:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .rank-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+        }
+
+        .rank-1 { background: #fef3c7; color: #b45309; }
+        .rank-2 { background: #334155; color: #f1f5f9; }
+        .rank-3 { background: #ffedd5; color: #c2410c; }
+        .rank-other { background: #0f172a; color: #94a3b8; }
+
+        .time-col {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .loading-box {
+            padding: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--police-accent);
+        }
+
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .controls, .btn-ctrl { display: none; }
+            .table-card { box-shadow: none; border: 1px solid #000; }
+            thead { background: #eee; color: #000; }
+            td { color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ لوحة شرف حُماة الوطن</h1>
+            <p>كشف ترتيب رجال الأمن الأول في مسابقة الأمن الوطني</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="val" id="total-students">0</div>
+                <div class="lbl">حُماة الوطن المشاركون</div>
+            </div>
+            <div class="stat-card">
+                <div class="val" id="top-score">0 / 44</div>
+                <div class="lbl">أعلى درجة مسجلة</div>
+            </div>
+            <div class="stat-card">
+                <div class="val" id="avg-score">0</div>
+                <div class="lbl">متوسط الدرجات</div>
+            </div>
+        </div>
+
+        <div class="podium" id="podium-area" style="display: none;">
+            <div class="podium-slot second">
+                <div class="podium-crown">🥈</div>
+                <div class="podium-name" id="name-2">-</div>
+                <div class="podium-score" id="score-2">-</div>
+                <div class="podium-badge">المركز الثاني</div>
+            </div>
+            <div class="podium-slot first">
+                <div class="podium-crown">👑</div>
+                <div class="podium-name" id="name-1">-</div>
+                <div class="podium-score" id="score-1">-</div>
+                <div class="podium-badge">بطل الأمن 🥇</div>
+            </div>
+            <div class="podium-slot third">
+                <div class="podium-crown">🥉</div>
+                <div class="podium-name" id="name-3">-</div>
+                <div class="podium-score" id="score-3">-</div>
+                <div class="podium-badge">المركز الثالث</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="🔍 ابحث عن اسم رجل أمن / طالب..." oninput="filterTable()">
+            </div>
+            <button class="btn-ctrl" onclick="loadData()">🔄 تحديث</button>
+            <button class="btn-ctrl" onclick="window.print()">🖨️ طباعة الكشف</button>
+        </div>
+
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">المركز</th>
+                        <th style="width: 45%;">اسم الطالب</th>
+                        <th style="width: 20%;">الدرجة</th>
+                        <th style="width: 20%;">التوقيت</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr>
+                        <td colspan="4" class="loading-box">⏳ جاري الاتصال بالسجل الأمني...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://sheetdb.io/api/v1/0sbiifzmzotk6";
+        const CURRENT_GAME_KEY = "security";
+        let securityScores = [];
+
+        async function loadData() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = `<tr><td colspan="4" class="loading-box">⏳ جاري تحديث النتائج الأمنية...</td></tr>`;
+
+            try {
+                const res = await fetch(API_URL);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        securityScores = data
+                            .filter(item => item.game === CURRENT_GAME_KEY)
+                            .sort((a, b) => Number(b.score) - Number(a.score));
+
+                        renderStats(securityScores);
+                        renderPodium(securityScores);
+                        renderTable(securityScores);
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan="4" style="padding:20px;">لا توجد مشاركات مسجلة بعد.</td></tr>`;
+                    }
+                }
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="4" style="color:#ef4444; padding:20px;">تعذر الاتصال بقاعدة البيانات.</td></tr>`;
+            }
+        }
+
+        function renderStats(list) {
+            document.getElementById('total-students').innerText = list.length;
+            if (list.length > 0) {
+                document.getElementById('top-score').innerText = `${list[0].score} / 44`;
+                const sum = list.reduce((acc, curr) => acc + Number(curr.score || 0), 0);
+                document.getElementById('avg-score').innerText = (sum / list.length).toFixed(1);
+            }
+        }
+
+        function renderPodium(list) {
+            const podium = document.getElementById('podium-area');
+            if (list.length >= 3) {
+                podium.style.display = 'flex';
+                document.getElementById('name-1').innerText = list[0].name;
+                document.getElementById('score-1').innerText = `${list[0].score} / 44`;
+
+                document.getElementById('name-2').innerText = list[1].name;
+                document.getElementById('score-2').innerText = `${list[1].score} / 44`;
+
+                document.getElementById('name-3').innerText = list[2].name;
+                document.getElementById('score-3').innerText = `${list[2].score} / 44`;
+            } else {
+                podium.style.display = 'none';
+            }
+        }
+
+        function renderTable(list) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="padding:20px;">لا توجد مشاركات مطابقة.</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, index) => {
+                const rank = index + 1;
+                let rankClass = "rank-other";
+                let rankDisplay = rank;
+
+                if (rank === 1) { rankClass = "rank-1"; rankDisplay = "🥇 1"; }
+                else if (rank === 2) { rankClass = "rank-2"; rankDisplay = "🥈 2"; }
+                else if (rank === 3) { rankClass = "rank-3"; rankDisplay = "🥉 3"; }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="rank-badge ${rankClass}">${rankDisplay}</span></td>
+                    <td style="text-align: right; font-weight:800;">${item.name}</td>
+                    <td style="color: #38bdf8; font-weight:900;">${item.score} / 44</td>
+                    <td class="time-col">${item.time || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTable() {
+            const q = document.getElementById('search-input').value.toLowerCase().trim();
+            const filtered = securityScores.filter(s => s.name && s.name.toLowerCase().includes(q));
+            renderTable(filtered);
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
