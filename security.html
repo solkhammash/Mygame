@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي حماة الوطن - الأمن الوطني</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --police-dark: #0f172a;
+            --police-navy: #1e293b;
+            --police-blue: #0284c7;
+            --police-accent: #38bdf8;
+            --siren-red: #ef4444;
+            --siren-gold: #fbbf24;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-rad: 22px;
+            --shadow: 0 16px 36px -8px rgba(2, 132, 199, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #0f172a 0%, #1e293b 55%, #090d16 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: var(--text-dark);
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: var(--border-rad);
+            width: 100%;
+            max-width: 680px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            padding: 26px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(56, 189, 248, 0.35);
+        }
+
+        /* شريط صافرة الطوارئ العلوي المضيء */
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 7px;
+            background: linear-gradient(90deg, #ef4444 0%, #38bdf8 50%, #fbbf24 100%);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #e2e8f0;
+        }
+
+        .badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            border: 1px solid #bae6fd;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .score-pill {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 800;
+            border: 1px solid #fecaca;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+            width: 0%;
+            transition: width 0.35s ease;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #0c4a6e;
+            font-size: 1.85rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0284c7;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+            transition: transform 0.15s;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .question-box {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .illustration {
+            width: 100%;
+            max-height: 195px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border-radius: 14px;
+            border: 1.5px dashed #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .illustration svg {
+            width: 100%;
+            height: 100%;
+            max-height: 175px;
+        }
+
+        .options-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #1e293b;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #f0f9ff;
+            border-color: #38bdf8;
+            transform: translateX(-4px);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        .tf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .tf-btn {
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.15s;
+        }
+
+        .tf-btn.true-btn {
+            background: #ecfdf5;
+            color: #047857;
+            border-color: #a7f3d0;
+        }
+
+        .tf-btn.false-btn {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .leaderboard-table th {
+            background: #0f172a;
+            color: #fff;
+            padding: 12px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .leaderboard-table td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .status-sync {
+            font-size: 0.95rem;
+            color: #0284c7;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+        <!-- شاشة الانطلاق -->
+        <div id="start-screen" class="screen active">
+            <div style="text-align:center; font-size: 3.5rem; margin-bottom: 6px;">🚔</div>
+            <h1>تحدي حُماة الوطن والأمن</h1>
+            <p class="subtitle">أجب عن 44 مهمة أمنية، واكتشف مهام الأجهزة الأمنية ورجال الدفاع المدني وأرقام الطوارئ لتعتلي قائمة شرف رجال الأمن الأوائل!</p>
+            
+            <div class="form-group">
+                <label for="player-name">اسم المتسابق / رجل الأمن الأول:</label>
+                <input type="text" id="player-name" placeholder="اكتب اسمك الثلاثي هنا..." autocomplete="off">
+            </div>
+
+            <button class="btn" onclick="startGame()">بدء المهمة الأمنية 🛡️</button>
+        </div>
+
+        <!-- شاشة الأسئلة -->
+        <div id="quiz-screen" class="screen">
+            <div class="header-bar">
+                <div class="badge" id="stage-badge">المهمة: 1 / 44</div>
+                <div class="score-pill" id="score-badge">النقاط: 0</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div id="illustration-container"></div>
+            <div class="question-box" id="question-text">...</div>
+            <div id="options-container"></div>
+        </div>
+
+        <!-- شاشة النهاية ولوحة الشرف -->
+        <div id="result-screen" class="screen">
+            <div style="text-align:center; font-size: 3.5rem; margin-bottom: 6px;">🎖️</div>
+            <h1>كفو يا بطل! تم إنجاز المهمة بنجاح</h1>
+            <p class="subtitle" id="final-stats"></p>
+
+            <h3 style="color: #0369a1; margin-bottom: 6px; text-align: center;">سجل صدارة حماة الوطن 🌟</h3>
+            <div id="sync-status" class="status-sync">جاري تسجيل نتيجتك واستدعاء كشف الأبطال...</div>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>المركز</th>
+                        <th>اسم الطالب</th>
+                        <th>الدرجة</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+
+            <button class="btn" style="margin-top: 14px;" onclick="resetGame()">إعادة التحدي 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const SHEETDB_API_URL = "https://sheetdb.io/api/v1/0sbiifzmzotk6";
+        const CURRENT_GAME_KEY = "security"; // وسم فريد لمسابقة الأمن الوطني
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        // الرسوم الأمنية التوضيحية بتقنية SVG
+        const policeCarSVG = `
+            <div class="illustration">
+                <svg viewBox="0 0 240 110">
+                    <rect x="0" y="0" width="240" height="110" fill="#f8fafc"/>
+                    <!-- هيكل دورية الأمن (أبيض وأسود) -->
+                    <path d="M30 65 L55 45 L150 45 L185 65 L215 65 L215 85 L25 85 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+                    <rect x="25" y="65" width="45" height="20" fill="#0f172a"/>
+                    <rect x="170" y="65" width="45" height="20" fill="#0f172a"/>
+                    <!-- الصافرة الأمنية المتوهجة -->
+                    <rect x="100" y="38" width="16" height="7" rx="2" fill="#ef4444"/>
+                    <rect x="116" y="38" width="16" height="7" rx="2" fill="#0284c7"/>
+                    <!-- العجلات -->
+                    <circle cx="65" cy="85" r="14" fill="#0f172a" stroke="#94a3b8" stroke-width="3"/>
+                    <circle cx="175" cy="85" r="14" fill="#0f172a" stroke="#94a3b8" stroke-width="3"/>
+                    <text x="120" y="77" font-size="11" font-weight="900" fill="#0f172a" text-anchor="middle">دوريات الأمن 999</text>
+                </svg>
+            </div>
+        `;
+
+        const fireTruckSVG = `
+            <div class="illustration">
+                <svg viewBox="0 0 240 110">
+                    <rect x="0" y="0" width="240" height="110" fill="#fffbeb"/>
+                    <!-- شاحنة الدفاع المدني الصفراء -->
+                    <rect x="30" y="40" width="125" height="48" fill="#eab308" stroke="#ca8a04" stroke-width="2"/>
+                    <rect x="155" y="48" width="55" height="40" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
+                    <!-- سلم الإنقاذ -->
+                    <line x1="40" y1="35" x2="140" y2="35" stroke="#94a3b8" stroke-width="4"/>
+                    <!-- الصافرة الصفراء والحمراء -->
+                    <rect x="175" y="42" width="18" height="6" fill="#ef4444" rx="2"/>
+                    <circle cx="65" cy="88" r="13" fill="#1e293b"/>
+                    <circle cx="175" cy="88" r="13" fill="#1e293b"/>
+                    <text x="95" y="68" font-size="10" font-weight="900" fill="#854d0e" text-anchor="middle">الدفاع المدني 998</text>
+                </svg>
+            </div>
+        `;
+
+        const cyberShieldSVG = `
+            <div class="illustration">
+                <svg viewBox="0 0 240 110">
+                    <rect x="0" y="0" width="240" height="110" fill="#f0f9ff"/>
+                    <!-- درع الأمن السيبراني الأزرق -->
+                    <path d="M120 18 L160 32 L160 62 Q120 95 120 95 Q80 62 80 62 L80 32 Z" fill="#0284c7" stroke="#0369a1" stroke-width="2"/>
+                    <!-- قفل الحماية الرقمي -->
+                    <rect x="110" y="52" width="20" height="16" rx="3" fill="#ffffff"/>
+                    <path d="M114 52 L114 44 Q120 38 126 44 L126 52" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+                    <text x="120" y="105" font-size="10" font-weight="bold" fill="#0369a1" text-anchor="middle">الهيئة الوطنية للأمن السيبراني</text>
+                </svg>
+            </div>
+        `;
+
+        const martyrsWallSVG = `
+            <div class="illustration">
+                <svg viewBox="0 0 240 110">
+                    <rect x="0" y="0" width="240" height="110" fill="#f8fafc"/>
+                    <!-- لوحة الشرف لشهداء الواجب -->
+                    <rect x="40" y="15" width="160" height="75" rx="6" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+                    <rect x="40" y="15" width="160" height="18" fill="#059669"/>
+                    <text x="120" y="28" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">شهداء الواجب والوطن</text>
+                    <!-- مربعات صور رمزية للشرف -->
+                    <rect x="52" y="42" width="18" height="18" fill="#e2e8f0" rx="2"/>
+                    <rect x="80" y="42" width="18" height="18" fill="#e2e8f0" rx="2"/>
+                    <rect x="108" y="42" width="18" height="18" fill="#e2e8f0" rx="2"/>
+                    <rect x="136" y="42" width="18" height="18" fill="#e2e8f0" rx="2"/>
+                    <rect x="164" y="42" width="18" height="18" fill="#e2e8f0" rx="2"/>
+                    <text x="120" y="102" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">واجبنا الدعاء لهم ورعاية أسرهم</text>
+                </svg>
+            </div>
+        `;
+
+        // بنك الـ 44 سؤالاً المستخرج بالكامل من ورقة عمل الأمن الوطني
+        const questions = [
+            // أسئلة الاختيار من متعدد (22 سؤالاً)
+            { type: 'mcq', q: "رقم الهاتف المخصص للاتصال بالدفاع المدني في حالات الطوارئ هو:", opts: ["999", "998", "995", "996"], ans: 1, svg: fireTruckSVG },
+            { type: 'mcq', q: "ما هو الرقم المخصص للإبلاغ عن الإرهابيين أو المطلوبين أمنياً؟", opts: ["999", "990", "997", "937"], ans: 1 },
+            { type: 'mcq', q: "أي المهام الآتية يقوم بها الجهاز الأمني الذي تتبع له دوريات الأمن؟", opts: ["حراسة حدود الوطن البرية والبحرية", "مكافحة الحرائق في المصانع والمتاجر", "تعزيز الأمن السيبراني", "تنظيم السير وضبط الحوادث ومساعدة المواطنين والمقيمين"], ans: 3, svg: policeCarSVG },
+            { type: 'mcq', q: "ما هو المفهوم الذي يُعرف بأنه الطمأنينة والاستقرار الذي نشعر به في وطننا ويوفر البيئة للتنمية؟", opts: ["الاقتصاد", "الأمن", "السياحة", "الصحة"], ans: 1 },
+            { type: 'mcq', q: "من هو النبي الذي دعا الله تعالى أن يجعل هذا البلد (مكة المكرمة) آمناً؟", opts: ["محمد صلى الله عليه وسلم", "إبراهيم عليه السلام", "موسى عليه السلام", "عيسى عليه السلام"], ans: 1 },
+            { type: 'mcq', q: "الجهاز الحكومي الذي يتولى تعزيز العدالة وحماية المجتمع وفقاً للنصوص الشرعية والقواعد المرعية هو:", opts: ["وزارة الحرس الوطني", "النيابة العامة", "المديرية العامة لحرس الحدود", "الهيئة الوطنية للأمن السيبراني"], ans: 1 },
+            { type: 'mcq', q: "يرافق رجال الأمن الحجاج لحمايتهم أثناء أدائهم مناسكهم. يدل هذا على أن رجال الأمن يحققون الحماية لـ:", opts: ["المواطنين فقط", "المقيمين فقط", "المواطنين والمقيمين والزائرين", "الزائرين فقط"], ans: 2 },
+            { type: 'mcq', q: "يُعتبر المواطن الصالح هو خط الدفاع الأول لوطنه، ويُطلق عليه لقب:", opts: ["رجل الأمن الأول", "المسؤول الإداري", "المراقب العام", "الحارس الشخصي"], ans: 0 },
+            { type: 'mcq', q: "أي الأجهزة الأمنية الآتية يتبع وزارة الداخلية في المملكة العربية السعودية؟", opts: ["المديرية العامة للدفاع المدني", "النيابة العامة", "وزارة الحرس الوطني", "الهيئة الوطنية للأمن السيبراني"], ans: 0, svg: fireTruckSVG },
+            { type: 'mcq', q: "ما التصرف الصحيح للمواطن إذا مر بموقع عمل ميداني لرجال الأمن؟", opts: ["الوقوف قريباً لمشاهدة ما يجري", "سؤالهم عن سبب وجودهم", "تصوير الموقع ونشره في وسائل التواصل", "الابتعاد عن الموقع وتجنب عرقلة عملهم"], ans: 3 },
+            { type: 'mcq', q: "مساعدة رجل أمن لطفل صغير أو حاج مسن تمثل أحد أهم أدوار رجال الأمن في:", opts: ["بث الطمأنينة في نفوس الناس", "تنظيم حركة السير في الطرق", "حراسة الحدود البرية", "مواجهة الإرهاب"], ans: 0 },
+            { type: 'mcq', q: "أي من الأجهزة التالية يتولى مهمة تعزيز الأمن السيبراني وحماية المصالح الحيوية والبنى التحتية للدولة؟", opts: ["المديرية العامة لحرس الحدود", "الهيئة الوطنية للأمن السيبراني", "النيابة العامة", "القوات الخاصة لأمن الطرق"], ans: 1, svg: cyberShieldSVG },
+            { type: 'mcq', q: "الجهة المسؤولة عن الدفاع عن الوطن وحمايته برياً وبحرياً وجواً هي:", opts: ["وزارة الدفاع", "وزارة الحرس الوطني", "رئاسة أمن الدولة", "النيابة العامة"], ans: 0 },
+            { type: 'mcq', q: "شاحنة الإطفاء والإنقاذ الظاهرة في الصورة تتبع أحد الأجهزة الأمنية الهامة، فما هو؟", opts: ["النيابة العامة", "المديرية العامة لمكافحة المخدرات", "المديرية العامة للدفاع المدني", "الهيئة الوطنية للأمن السيبراني"], ans: 2, svg: fireTruckSVG },
+            { type: 'mcq', q: "من أبرز مهام المديرية العامة لمكافحة المخدرات:", opts: ["تنظيم السير وضبط الحوادث", "حماية حدود الوطن وحراسته", "مكافحة الحرائق وإطفاؤها", "توعية المواطنين بأضرار المخدرات وسبل الوقاية منها وضبط مروجيها"], ans: 3 },
+            { type: 'mcq', q: "عند وقوع حريق، ما التصرف الصحيح الذي ينبغي للمواطنين والمقيمين فعله؟", opts: ["إفساح الطريق لرجال الدفاع المدني وعدم التجمهر", "الاقتراب من موقع الحريق لمشاهدته", "تصوير موقع الحريق ونشره", "إيقاف السيارة قرب الموقع للاطمئنان"], ans: 0, svg: fireTruckSVG },
+            { type: 'mcq', q: "واجبنا تجاه أسر شهداء الواجب والوطن يتضمن:", opts: ["نسيان تضحياتهم", "مساعدتهم وتقديم العون والدعاء لهم بالمغفرة", "الابتعاد عنهم", "عدم الدعاء لهم"], ans: 1, svg: martyrsWallSVG },
+            { type: 'mcq', q: "من الجهة التي تقوم بحماية الوطن وبسط الأمن للمواطنين والمقيمين؟", opts: ["الدولة ورجال الأمن", "الشركات التجارية", "المزارعون في القرى", "وسائل التواصل الاجتماعي"], ans: 0 },
+            { type: 'mcq', q: "أي مما يلي يُعد من الأعمال التي تؤثر سلباً في أمن واستقرار الوطن؟", opts: ["الالتزام بالنظام", "مساعدة رجال الأمن", "تداول الشائعات والأخبار الكاذبة", "الإبلاغ عن المخالفين"], ans: 2 },
+            { type: 'mcq', q: "ما المقصود بمفهوم الأمن؟", opts: ["كثرة عدد السكان في المدن الكبيرة", "زيادة عدد المصانع في الوطن", "تنوع التضاريس والمناخ", "الطمأنينة والاستقرار الذي نشعر به في وطننا ويوفر البيئة للتنمية"], ans: 3 },
+            { type: 'mcq', q: "عند ملاحظة أعمال مشبوهة أو تواصل مع جهات إرهابية تدل على حدوث خلل بالأمن، نتصل بالرقم:", opts: ["937", "990", "997", "998"], ans: 1 },
+            { type: 'mcq', q: "أي الأعمال الآتية يُعد من أوجب واجباتنا تجاه شهداء الواجب والوطن؟", opts: ["الالتزام بقواعد المرور", "المحافظة على نظافة الحي", "مساعدة الزملاء في مراجعة دروسهم", "مساعدة أسرهم والدعاء لشهدائنا بالرحمة والمغفرة"], ans: 3, svg: martyrsWallSVG },
+
+            // أسئلة الصواب والخطأ (22 سؤالاً)
+            { type: 'tf', q: "من مهام النيابة العامة تعزيز العدالة وحماية المجتمع وفقاً للنصوص الشرعية.", ans: true },
+            { type: 'tf', q: "يقتصر عمل رجل الأمن على مواجهة الإرهاب دون غيره من الأعمال والمهام.", ans: false },
+            { type: 'tf', q: "حماية الوطن وبسط الأمن للمواطنين والمقيمين من المهام المنوطة بالدولة.", ans: true },
+            { type: 'tf', q: "التجمهر وفضول المشاهدة حول مواقع الحريق يُعيق وصول سيارات الإسعاف والإطفاء.", ans: true, svg: fireTruckSVG },
+            { type: 'tf', q: "تتولى الهيئة الوطنية للأمن السيبراني مكافحة الحرائق وإنقاذ المصابين في أوقات الكوارث.", ans: false, svg: cyberShieldSVG },
+            { type: 'tf', q: "مركبات الدفاع المدني تُستعمل في مواجهة الحرائق وإنقاذ المصابين في أوقات الكوارث والسيول.", ans: true, svg: fireTruckSVG },
+            { type: 'tf', q: "التسول وإعطاء الأموال لمجهولين يُعتبر وسيلة لدعم وتمويل الإرهاب ومخالفي الأنظمة.", ans: true },
+            { type: 'tf', q: "يقتصر دور تحقيق الأمن على رجال الأمن فقط ولا علاقة للمواطن به.", ans: false },
+            { type: 'tf', q: "خصصت حكومة المملكة العربية السعودية لأسر شهداء الواجب والوطن إدارة تُعنى بشؤونهم ورعايتهم.", ans: true, svg: martyrsWallSVG },
+            { type: 'tf', q: "دوريات الأمن تتبع تنظيمياً المديرية العامة للدفاع المدني.", ans: false, svg: policeCarSVG },
+            { type: 'tf', q: "خصصت حكومة المملكة إدارات متخصصة لرعاية أسر شهداء الواجب وتقديم الخدمات التعليمية والصحية لهم.", ans: true, svg: martyrsWallSVG },
+            { type: 'tf', q: "من أعمال رجال الأمن تنظيم الأمور في المجتمع وحفظ النظام في أماكن تجمع الناس كالمواسم والحج.", ans: true },
+            { type: 'tf', q: "يستطيع المواطن منفرداً أن يؤمن نفسه وأسرته دون الحاجة إلى رجال الأمن والدولة.", ans: false },
+            { type: 'tf', q: "الأمن يوفر البيئة الملائمة للتعليم والتنمية والرخاء الاقتصادي في الوطن.", ans: true },
+            { type: 'tf', q: "من مهام الدولة حماية الوطن وبسط الأمن للمواطنين والمقيمين والزوار.", ans: true },
+            { type: 'tf', q: "وزارة الحرس الوطني تساهم في الدفاع عن الوطن وتحافظ على أمنه الداخلي واستقراره.", ans: true },
+            { type: 'tf', q: "تقوم القوات الخاصة لأمن الطرق بالمحافظة على الأمن والسلامة داخل المدن فقط دون الطرق السريعة.", ans: false },
+            { type: 'tf', q: "شهداء الواجب والوطن استشهدوا وهم يدافعون عن الوطن داخله فقط دون حراسة حدوده.", ans: false, svg: martyrsWallSVG },
+            { type: 'tf', q: "التستر على المجرمين وعدم الإبلاغ عنهم يُعتبر نوعاً من المحافظة على الأمن ومساعدة الناس.", ans: false },
+            { type: 'tf', q: "رئاسة أمن الدولة مسؤولة عن تنظيم السير وضبط الحوادث المرورية في الشوارع.", ans: false },
+            { type: 'tf', q: "حقق الله تعالى دعوة نبيه إبراهيم عليه السلام بأن جعل بلادنا المملكة العربية السعودية آمنة مستقرة.", ans: true },
+            { type: 'tf', q: "الإبلاغ عن المجرمين والمهربين ليس من مسؤولية المواطن الصالح تجاه وطنه.", ans: false }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let playerName = "";
+        let answersLocked = false;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startGame() {
+            const input = document.getElementById('player-name');
+            if (!input.value.trim()) {
+                alert("فضلًا اكتب اسمك أولاً لبدء المهمة الأمنية!");
+                return;
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            playerName = input.value.trim();
+            currentQuestion = 0;
+            score = 0;
+            showScreen('quiz-screen');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            answersLocked = false;
+            const q = questions[currentQuestion];
+            
+            document.getElementById('stage-badge').innerText = `المهمة: ${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('score-badge').innerText = `النقاط: ${score}`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            document.getElementById('question-text').innerText = `${currentQuestion + 1}. ${q.q}`;
+            const illusContainer = document.getElementById('illustration-container');
+            illusContainer.innerHTML = q.svg ? q.svg : '';
+
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+
+            if (q.type === 'mcq') {
+                const list = document.createElement('div');
+                list.className = 'options-list';
+                q.opts.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span>${opt}</span><span style="opacity:0.6; font-size:0.85rem;">[${['أ','ب','ج','د'][idx]}]</span>`;
+                    btn.onclick = () => checkMCQ(idx, btn);
+                    list.appendChild(btn);
+                });
+                optsContainer.appendChild(list);
+            } else {
+                const grid = document.createElement('div');
+                grid.className = 'tf-grid';
+                grid.innerHTML = `
+                    <button class="tf-btn true-btn" onclick="checkTF(true, this)">
+                        <span>✔</span>
+                        <span>صواب</span>
+                    </button>
+                    <button class="tf-btn false-btn" onclick="checkTF(false, this)">
+                        <span>✖</span>
+                        <span>خطأ</span>
+                    </button>
+                `;
+                optsContainer.appendChild(grid);
+            }
+        }
+
+        function checkMCQ(chosenIdx, btn) {
+            if (answersLocked) return;
+            answersLocked = true;
+            const q = questions[currentQuestion];
+            const allBtns = document.querySelectorAll('.option-btn');
+
+            if (chosenIdx === q.ans) {
+                btn.classList.add('correct');
+                score++;
+                playTone(620, 'sine', 0.16);
+            } else {
+                btn.classList.add('wrong');
+                allBtns[q.ans].classList.add('correct');
+                playTone(200, 'sawtooth', 0.28);
+            }
+
+            document.getElementById('score-badge').innerText = `النقاط: ${score}`;
+            setTimeout(nextQuestion, 1000);
+        }
+
+        function checkTF(chosenVal, btn) {
+            if (answersLocked) return;
+            answersLocked = true;
+            const q = questions[currentQuestion];
+
+            if (chosenVal === q.ans) {
+                btn.style.boxShadow = "0 0 15px #10b981";
+                score++;
+                playTone(620, 'sine', 0.16);
+            } else {
+                btn.style.boxShadow = "0 0 15px #ef4444";
+                playTone(200, 'sawtooth', 0.28);
+            }
+
+            document.getElementById('score-badge').innerText = `النقاط: ${score}`;
+            setTimeout(nextQuestion, 1000);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                renderQuestion();
+            } else {
+                finishGame();
+            }
+        }
+
+        async function finishGame() {
+            showScreen('result-screen');
+            document.getElementById('final-stats').innerText = `رجل الأمن الأول: ${playerName} | درجاتك: ${score} من ${questions.length}`;
+            await syncToGlobalSheets(playerName, score);
+        }
+
+        async function syncToGlobalSheets(name, pts) {
+            const status = document.getElementById('sync-status');
+            status.innerText = "⏳ جاري إرسال النتيجة إلى السجل الأمني الموحد وتحديث الصدارة...";
+
+            try {
+                await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: [{
+                            name: name,
+                            score: pts,
+                            game: CURRENT_GAME_KEY,
+                            time: new Date().toLocaleString('ar-SA')
+                        }]
+                    })
+                });
+            } catch(e) {
+                console.error("فشل الإرسال:", e);
+            }
+
+            let participants = [];
+            try {
+                const res = await fetch(SHEETDB_API_URL);
+                if (res.ok) {
+                    const allData = await res.json();
+                    if (Array.isArray(allData)) {
+                        participants = allData.filter(item => item.game === CURRENT_GAME_KEY);
+                    }
+                }
+            } catch(e) {
+                console.error("فشل الجلب:", e);
+            }
+
+            participants.sort((a, b) => Number(b.score) - Number(a.score));
+
+            status.innerText = "✅ تم تحديث كشف الأبطال بنجاح!";
+            renderLeaderboard(participants);
+        }
+
+        function renderLeaderboard(list) {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+            list.slice(0, 30).forEach((entry, idx) => {
+                const tr = document.createElement('tr');
+                const medal = idx === 0 ? '🥇 الأول' : idx === 1 ? '🥈 الثاني' : idx === 2 ? '🥉 الثالث' : `${idx + 1}`;
+                if (entry.name === playerName && Number(entry.score) === score) {
+                    tr.style.backgroundColor = '#e0f2fe';
+                    tr.style.color = '#0369a1';
+                    tr.style.fontWeight = '900';
+                }
+                tr.innerHTML = `
+                    <td>${medal}</td>
+                    <td>${entry.name}</td>
+                    <td>${entry.score} / 44</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function resetGame() {
+            document.getElementById('player-name').value = '';
+            showScreen('start-screen');
+        }
+    </script>
+</body>
+</html>
