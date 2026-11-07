@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برج المجد التاريخي - الدولة السعودية الثانية</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: 'Tajawal', 'Tahoma', sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 12px;
+            background: radial-gradient(circle at top, #162032 0%, #090d16 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* الشريط العلوي الخارجي مطابق للصورة */
+        .top-header-bar {
+            width: 440px;
+            max-width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 14px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+        }
+        .header-main-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fbbf24;
+            line-height: 1.2;
+        }
+        .header-sub-title {
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .top-pill-btn {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+        .top-pill-btn.gold {
+            background: rgba(180, 83, 9, 0.35);
+            border-color: #f59e0b;
+            color: #fef08a;
+        }
+        .top-pill-btn:hover {
+            transform: translateY(-1px);
+            border-color: #fbbf24;
+        }
+
+        /* إطار الجهاز الذهبي HD */
+        .game-device {
+            width: 440px;
+            max-width: 100%;
+            background: linear-gradient(180deg, #1e2536 0%, #0f1420 100%);
+            border: 3px solid #f59e0b;
+            border-radius: 26px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.85), 0 0 20px rgba(245, 158, 11, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .device-notch-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 10px 8px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+        }
+        .era-tag {
+            color: #34d399;
+        }
+        .speaker-slot {
+            width: 55px;
+            height: 5px;
+            background: #090d16;
+            border-radius: 4px;
+            border: 1px solid #334155;
+        }
+        .edition-tag {
+            color: #fbbf24;
+        }
+
+        /* شاشة اللعب الداخلية */
+        .screen-wrapper {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            background: #090d16;
+            border: 2px solid rgba(245, 158, 11, 0.5);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* الشريط المعلوماتي العلوي داخل الشاشة (HUD Cards) */
+        .hud-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .hud-card {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1.5px solid #475569;
+            border-radius: 10px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .hud-card.knight-card {
+            border-color: #10b981;
+        }
+        .hud-card.gold-card {
+            border-color: #f59e0b;
+        }
+        .hud-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .hud-icon.green {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #34d399;
+        }
+        .hud-icon.coin {
+            background: radial-gradient(circle, #fde047 0%, #d97706 100%);
+            color: #78350f;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 12px;
+        }
+        .hud-text-col {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            line-height: 1.2;
+        }
+        .hud-label {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        .hud-val {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .hud-val.emerald {
+            color: #34d399;
+        }
+        .hud-val.amber {
+            color: #fbbf24;
+        }
+
+        /* شريط التقدم الملون تحت الـ HUD */
+        .progress-bar-track {
+            position: absolute;
+            top: 56px;
+            left: 12px;
+            right: 12px;
+            height: 6px;
+            background: rgba(30, 41, 59, 0.85);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 5;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #10b981, #fbbf24, #f97316);
+            transition: width 0.35s ease;
+        }
+
+        /* نافذة الأسئلة الاحترافية داخل الشاشة */
+        .quiz-panel {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 14px;
+            padding: 12px;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+            transition: opacity 0.25s, transform 0.25s;
+        }
+        .quiz-panel.hidden-jump {
+            opacity: 0.15;
+            pointer-events: none;
+            transform: translateY(8px);
+        }
+        .question-badge-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #fbbf24;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .question-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #f8fafc;
+            text-align: center;
+            margin-bottom: 10px;
+            line-height: 1.45;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+        .choice-btn {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 1.5px solid #334155;
+            border-radius: 9px;
+            color: #e2e8f0;
+            padding: 8px 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            text-align: right;
+            transition: 0.15s;
+        }
+        .choice-btn:hover:not(:disabled) {
+            border-color: #fbbf24;
+            background: linear-gradient(180deg, #283548 0%, #162032 100%);
+        }
+        .choice-btn.correct-state {
+            background: linear-gradient(180deg, #059669 0%, #065f46 100%) !important;
+            border-color: #34d399 !important;
+            color: #fff !important;
+        }
+        .choice-btn.wrong-state {
+            background: linear-gradient(180deg, #dc2626 0%, #7f1d1d 100%) !important;
+            border-color: #f87171 !important;
+            color: #fff !important;
+        }
+        .choice-num {
+            background: #f59e0b;
+            color: #090d16;
+            font-weight: 800;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        /* الأزرار السفلية الـ 4 المطابقة للصورة */
+        .bottom-keypad {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+            direction: ltr;
+        }
+        .pad-key {
+            background: linear-gradient(180deg, #273244 0%, #151c28 100%);
+            border: 1.5px solid #475569;
+            border-radius: 10px;
+            padding: 7px 0;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 0 #090d16;
+            transition: 0.1s;
+        }
+        .pad-key span {
+            font-size: 10px;
+            color: #fbbf24;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .pad-key:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #090d16;
+        }
+
+        /* النوافذ المنبثقة (البداية / المراكز) */
+        .overlay-modal {
+            position: absolute;
+            inset: 0;
+            background: rgba(9, 13, 22, 0.94);
+            backdrop-filter: blur(6px);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .crest-badge {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid #f59e0b;
+            color: #fbbf24;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .modal-main-heading {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fef08a;
+            margin: 0 0 8px;
+            text-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+        }
+        .modal-sub-text {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+        .student-input, .mode-dropdown {
+            width: 88%;
+            padding: 10px 12px;
+            background: #151c28;
+            border: 1.5px solid #475569;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        .student-input:focus, .mode-dropdown:focus {
+            border-color: #fbbf24;
+        }
+        .gold-action-btn {
+            background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+            color: #fff;
+            border: 2px solid #fef08a;
+            border-radius: 12px;
+            padding: 10px 26px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            margin-top: 4px;
+        }
+        .lb-list {
+            width: 94%;
+            max-height: 190px;
+            overflow-y: auto;
+            background: #111827;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 8px;
+            margin: 8px 0 12px;
+            font-size: 12px;
+        }
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .lb-item:first-child {
+            color: #fbbf24;
+            font-weight: 800;
+        }
+        .shake-screen {
+            animation: shakeKey 0.35s ease-in-out;
+        }
+        @keyframes shakeKey {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-7px); }
+            50% { transform: translateX(7px); }
+            75% { transform: translateX(-5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي الخارجي -->
+    <div class="top-header-bar">
+        <div class="header-actions">
+            <button class="top-pill-btn" onclick="toggleSound()" id="soundToggleBtn">🔊</button>
+            <button class="top-pill-btn gold" onclick="toggleLeaderboardModal()">🏆 المراكز</button>
+            <button class="top-pill-btn" onclick="toggleQuizVisibility()">📱 الأزرار</button>
+        </div>
+        <div class="header-title-group">
+            <div style="text-align: right;">
+                <div class="header-main-title">برج المجد التاريخي</div>
+                <div class="header-sub-title">الدولة السعودية الثانية • 66 سؤالاً</div>
+            </div>
+            <div class="status-dot"></div>
+        </div>
+    </div>
+
+    <!-- إطار الجهاز الذهبي -->
+    <div class="game-device">
+        <div class="device-notch-row">
+            <span class="era-tag">١٢٤٠هـ - ١٣٠٩هـ</span>
+            <div class="speaker-slot"></div>
+            <span class="edition-tag">GAMELOFT • HD EDITION</span>
+        </div>
+
+        <div class="screen-wrapper" id="screenWrapper">
+            <canvas id="hdCanvas" width="410" height="550"></canvas>
+
+            <!-- البطاقات العلوية الثلاث داخل الشاشة -->
+            <div class="hud-overlay">
+                <div class="hud-card gold-card">
+                    <div class="hud-text-col">
+                        <span class="hud-label">الرصيد</span>
+                        <span class="hud-val amber" id="hudCoins">0</span>
+                    </div>
+                    <div class="hud-icon coin">★</div>
+                </div>
+
+                <div class="hud-card">
+                    <div class="hud-text-col" style="text-align:center;">
+                        <span class="hud-label">السؤال الحالي</span>
+                        <span class="hud-val" id="hudQuestionNum">66 / 1</span>
+                    </div>
+                </div>
+
+                <div class="hud-card knight-card">
+                    <div class="hud-text-col">
+                        <span class="hud-val" id="hudPlayerName">فارس المجد</span>
+                        <span class="hud-label">المرتبة: <b class="hud-val emerald" id="hudStep">0 / 66</b></span>
+                    </div>
+                    <div class="hud-icon green">⚔️</div>
+                </div>
+            </div>
+
+            <!-- شريط التقدم الملون -->
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+
+            <!-- لوحة الأسئلة -->
+            <div class="quiz-panel" id="quizPanel" style="display: none;">
+                <div class="question-badge-row">
+                    <span id="sectionBadge">القسم الأول: اختر الإجابة الصحيحة</span>
+                    <span id="singleTryBadge" style="color:#34d399;">⚡ فرصة واحدة للسؤال</span>
+                </div>
+                <div class="question-title" id="questionText"></div>
+                <div class="choices-grid" id="choicesGrid"></div>
+            </div>
+
+            <!-- شاشة البداية -->
+            <div class="overlay-modal" id="startModal">
+                <div class="crest-badge">⚔️ الدولة السعودية الثانية • ١٢٤٠هـ</div>
+                <h1 class="modal-main-heading">برج المجد التاريخي</h1>
+                <div class="modal-sub-text">
+                    أجب عن أسئلة المراجعة لتصعد بالفارس درجات البرج التراثي وتلتقط العملات الذهبية.<br>
+                    • عند الإجابة الصحيحة تصعد مرتبة وتكسب <b>+100 عملة</b>.<br>
+                    • عند الإجابة الخاطئة تبقى في مرتبتك بدون عملات وينتقل السؤال مباشرة!
+                </div>
+                <input type="text" id="studentNameInput" class="student-input" placeholder="أدخل اسم الفارس (الطالب)..." value="فارس المجد">
+                <select id="modeSelect" class="mode-dropdown">
+                    <option value="all">جميع أسئلة المرفق كاملة (66 سؤالاً)</option>
+                    <option value="mcq">أسئلة الاختيار من متعدد فقط (33 سؤالاً)</option>
+                    <option value="tf">أسئلة الصح والخطأ فقط (33 سؤالاً)</option>
+                </select>
+                <button class="gold-action-btn" onclick="startNewGame()">انطلق إلى البرج ⚔️</button>
+            </div>
+
+            <!-- شاشة النهاية ولوحة المراكز -->
+            <div class="overlay-modal" id="leaderboardModal" style="display: none;">
+                <div class="crest-badge" id="endStatusBadge">🏆 لوحة شرف فرسان المجد</div>
+                <h2 class="modal-main-heading" id="endMainTitle">ترتيب المراكز</h2>
+                <div class="modal-sub-text" id="endSummaryText">يرتب الفرسان حسب المرتبة التي وصلوا إليها في البرج ورصيد الذهب</div>
+                <div class="lb-list" id="lbListContainer"></div>
+                <div style="display:flex; gap:8px;">
+                    <button class="gold-action-btn" onclick="openStartModal()">فارس جديد / إعادة</button>
+                    <button class="top-pill-btn" onclick="closeLeaderboardModal()">إغلاق</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- الأزرار الرقمية السفلية (1 - 2 - 3 - 4) -->
+        <div class="bottom-keypad" id="bottomKeypad">
+            <button class="pad-key" onclick="handleChoice(0)">1<span>الخيار ١</span></button>
+            <button class="pad-key" onclick="handleChoice(1)">2<span>الخيار ٢</span></button>
+            <button class="pad-key" onclick="handleChoice(2)">3<span>الخيار ٣</span></button>
+            <button class="pad-key" onclick="handleChoice(3)">4<span>الخيار ٤</span></button>
+        </div>
+    </div>
+
+<script>
+    // ========================================================
+    // 1. بنك الأسئلة الكامل من مرفق الدولة السعودية الثانية (66 سؤالاً)
+    // ========================================================
+    const mcqBank = [
+        { q: "1- ما هي المدينة التي اتخذها الإمام تركي بن عبد الله عاصمة للدولة السعودية الثانية؟", a: "الرياض", w: ["الدرعية", "حائل", "الأحساء"] },
+        { q: "2- إلى أين نُقل الإمام فيصل بن تركي بعد أسره في القلعة الحصينة؟", a: "إلى مصر", w: ["إلى العراق", "إلى الكويت", "إلى الشام"] },
+        { q: "3- في أي عام هجري توفي الإمام فيصل بن تركي بعد أن استمر في حكم الدولة السعودية الثانية؟", a: "عام ١٢٨٢هـ", w: ["عام ١٢٥٣هـ", "عام ١٢٥٠هـ", "عام ١٣٠٧هـ"] },
+        { q: "4- من هو أمير حائل الذي استغل الفوضى والنزاعات الداخلية في الدولة السعودية الثانية للاستيلاء على الحكم؟", a: "محمد بن رشيد", w: ["إسماعيل آغا", "خورشيد باشا", "سعود بن فيصل"] },
+        { q: "5- أمر الإمام سعود بن عبد العزيز بحياكة كسوة الكعبة المشرفة في:", a: "الأحساء", w: ["الدرعية", "مكة المكرمة", "الرياض"] },
+        { q: "6- يُعد قصر سلوى من الشواهد العمرانية البارزة للدولة السعودية، وكان مقراً لـ:", a: "الحكم", w: ["العلم والعلماء", "استقبال الحجاج", "الصناعة"] },
+        { q: "7- من أسس النظام الإداري والحكم في الدولة السعودية:", a: "البيعة", w: ["تعدد الأئمة في الصلاة", "الانعزال عن المجتمع", "إهمال التعليم"] },
+        { q: "8- من خدمة الدولة السعودية للحرمين الشريفين توحيد صلاة الجماعة خلف إمام واحد، فكم كان عدد الأئمة قبل ذلك؟", a: "أربعة أئمة", w: ["إمام واحد", "ثلاثة أئمة", "إمامان"] },
+        { q: "9- أي الأعمال الآتية من مظاهر ازدهار التعليم في الدولة السعودية؟", a: "إنشاء دور العلم والمكتبات", w: ["بناء الأسوار وأبراج الحماية", "تطوير نظام العسس ليلاً", "إعانة الشباب على الزواج"] },
+        { q: "10- وقعت في بلدة الحلوة سنة ١٢٥٣هـ معركة بين السعوديين والقوات العثمانية المعتدية، بأي اسم يسميها الأهالي؟", a: "معركة الروم", w: ["معركة المليداء", "معركة حوطة بني تميم", "معركة الدرعية"] },
+        { q: "11- المبنى المخصص لموارد الدولة ومصروفاتها في الدرعية، ما اسمه؟", a: "بيت المال", w: ["سبالة موضي", "دار الضيافة", "برج الحماية"] },
+        { q: "12- بالرجوع لخريطة امتداد الدولة السعودية الثانية، أي المناطق الآتية يقع خارج هذا الامتداد؟", a: "الحجاز", w: ["نجد", "وادي الدواسر", "الأحساء"] },
+        { q: "13- ما اسم المدينة التي كانت عاصمة الدولة السعودية الثانية قديماً؟", a: "الرياض", w: ["الدرعية", "حائل", "الأحساء"] },
+        { q: "14- من آخر أئمة الدولة السعودية الثانية؟", a: "الإمام عبد الرحمن بن فيصل", w: ["الإمام تركي بن عبد الله", "الإمام فيصل بن تركي", "الإمام عبد الله بن فيصل"] },
+        { q: "15- من الإمام الذي تولى الحكم في الدولة السعودية الثانية بعد وفاة الإمام تركي بن عبد الله؟", a: "الإمام فيصل بن تركي", w: ["الإمام عبد الله بن فيصل", "الإمام عبد الرحمن بن فيصل", "الإمام سعود بن فيصل"] },
+        { q: "16- إلى أين انتقل الإمام عبد الرحمن بن فيصل وأسرته بعد نهاية الدولة السعودية الثانية؟", a: "الكويت", w: ["مصر", "الشام", "العراق"] },
+        { q: "17- الجامع الكبير في الرياض أقامه الإمام الذي أعاد تأسيس الدولة السعودية الثانية وأصبح إمامها الأول، من هو؟", a: "الإمام تركي بن عبد الله", w: ["الإمام فيصل بن تركي", "الإمام عبد الله بن فيصل", "الإمام عبد الرحمن بن فيصل"] },
+        { q: "18- وقف في الطريف بالدرعية أنشئ لخدمة المحتاجين وطلبة العلم وسُمّي باسم والدة مؤسسه (سبالة موضي)، فمن الإمام الذي أسسه؟", a: "الإمام عبد العزيز بن محمد بن سعود", w: ["الإمام محمد بن سعود", "الإمام تركي بن عبد الله", "الإمام سعود بن عبد العزيز"] },
+        { q: "19- أعاد الإمام تركي بن عبد الله لعاصمته الجديدة دورها التاريخي وبنى الجامع الكبير، فما العمل الذي قام به لحماية المدينة؟", a: "بنى أسوارها", w: ["حفر آبارها", "شق طرقها", "وسع أسواقها"] },
+        { q: "20- من مظاهر الأمن التي أنشأتها الدولة السعودية لحفظ الأمن ليلاً:", a: "نظام العسس", w: ["نظام البيعة", "نظام الجباية", "نظام الوقف"] },
+        { q: "21- ما هي المعركة التي انتصر فيها محمد بن رشيد عام ١٣٠٨هـ وأدت لنهاية الدولة السعودية الثانية؟", a: "معركة المليداء", w: ["معركة الحلوة", "معركة الدرعية", "معركة الرياض"] },
+        { q: "22- ما الاسم الذي أطلقه الأهالي على معركة الحلوة لكثرة القتلى في صفوف القوات المعتدية؟", a: "معركة الروم", w: ["معركة النار", "معركة الصريف", "معركة الحريق"] },
+        { q: "23- من هو مؤسس الدولة السعودية الثانية؟", a: "الإمام تركي بن عبد الله", w: ["الإمام محمد بن سعود", "الإمام فيصل بن تركي", "الإمام عبد الرحمن بن فيصل"] },
+        { q: "24- ما نتيجة معركة الحلوة سنة ١٢٥٣هـ بين السعوديين والقوات العثمانية المعتدية؟", a: "هزيمة القوات المعتدية وتكبيدها خسائر كبيرة", w: ["انسحاب السعوديين دون قتال", "انتصار القوات المعتدية", "توقف القتال دون خسائر"] },
+        { q: "25- الوقف الذي خصصه الإمام عبد العزيز بن محمد بن سعود لطلبة العلم والمحتاجين عُرف باسم:", a: "سبالة موضي", w: ["وقف الدرعية", "سبالة الطريف", "بيت المال"] },
+        { q: "26- المسجد الجامع الكبير بناه الإمام تركي بن عبد الله في المدينة التي اتخذها عاصمة للدولة السعودية الثانية، ما اسمها؟", a: "الرياض", w: ["الدرعية", "حائل", "الكويت"] },
+        { q: "27- غادر الإمام عبد الرحمن بن فيصل مدينة الرياض ومعه أسرته وابنه الملك عبد العزيز، حتى استقروا في:", a: "الكويت", w: ["الدرعية", "حائل", "المليداء"] },
+        { q: "28- من قائد التعزيزات الجديدة التي جاءت للأعداء بعد معركة الحلوة لفرض النفوذ والسيطرة؟", a: "خورشيد باشا", w: ["محمد بن رشيد", "الإمام سعود بن فيصل", "الإمام عبد الله بن فيصل"] },
+        { q: "29- في أي عام توفي الإمام فيصل بن تركي؟", a: "١٢٨٢هـ", w: ["١٢٥٠هـ", "١٢٥٣هـ", "١٢٩١هـ"] },
+        { q: "30- ما اسم السيف الشهير الذي كان يملكه الإمام تركي بن عبد الله؟", a: "الأجرب", w: ["البتار", "الصقلاوي", "المهند"] },
+        { q: "31- في أي عام تم تأسيس الدولة السعودية الثانية؟", a: "١٢٤٠هـ", w: ["١٢٣٠هـ", "١١٥٧هـ", "١٣١٩هـ"] },
+        { q: "32- أمر الإمام سعود بن عبد العزيز ببدء الصناعة الوطنية لكسوة الكعبة المشرفة، فأين أمر بحياكتها؟", a: "الأحساء", w: ["الرياض", "الدرعية", "مكة المكرمة"] },
+        { q: "33- اشتهرت الدولة السعودية بالعمران، ومن مظاهره بناء قصور الحكم، ومن أشهرها:", a: "قصر سلوى", w: ["بيت المال", "سبالة موضي", "دار الضيافة"] }
+    ];
+
+    const tfBank = [
+        { q: "صح أم خطأ (1): بنى الإمام تركي بن عبد الله الجامع الكبير في مدينة الدرعية بعد أن اتخذها عاصمة للدولة السعودية الثانية.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (2): يُسمي أهالي الحلوة معركة عام ١٢٥٣هـ بمعركة الروم لكثرة من قُتل فيها من القوات العثمانية المعتدية.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (3): وحدت الدولة السعودية صلاة الجماعة في المسجد الحرام خلف إمام واحد بدلاً من أربعة أئمة.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (4): وحدت الدولة السعودية صلاة الجماعة في المسجد الحرام خلف إمام واحد بدلاً من أربعة أئمة.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (5): تبين خريطة الدولة السعودية الثانية أن إقليم نجد يقع خارج امتداد الدولة.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (6): آثار سبالة موضي في الطريف بالدرعية هي قصر من قصور الحكم.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (7): مبنى بيت المال بالدرعية خُصص لموارد الدولة ومصروفاتها.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (8): كان نظام العسس يستخدم لجمع الزكاة في النهار.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (9): استمرت الدولة السعودية الثانية في قوتها وتوحدها طوال فترة حكم الإمام عبد الله بن فيصل.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (10): تولى الإمام فيصل بن تركي الحكم بعد وفاة والده في عام ١٢٤٩هـ.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (11): وقعت معركة الحلوة سنة ١٢٥٣هـ وكان ذلك في عهد الإمام تركي بن عبد الله.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (12): عاصمة الدولة السعودية الثانية قديماً هي مدينة حائل التي كان محمد بن رشيد أميراً عليها.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (13): قاد إسماعيل آغا الحملات العثمانية المعتدية على الرياض عام ١٢٥٣هـ.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (14): كان النداء في نظام الجيش يهدف لإخبار البلدات للمشاركة في حملات توحيد الدولة.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (15): الإمام عبد الرحمن بن فيصل بن تركي هو أول أئمة الدولة السعودية الثانية.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (16): الجامع الكبير في الرياض بناه الإمام تركي بن عبد الله في عاصمة الدولة السعودية الثانية.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (17): الراية السعودية الحمراء وعليها شعار التوحيد هي التي كانت تتقدم الجيش في الدولة السعودية.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (18): قاوم السعوديون القوات العثمانية المعتدية وكبدوها خسائر كبيرة في معركة الحلوة.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (19): قلعة الحلوة الأثرية تقع في بلدة تتبع محافظة حوطة بني تميم في منطقة الرياض.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (20): عادت شبه الجزيرة العربية بعد نهاية الدولة السعودية الثانية إلى الوحدة والاستقرار.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (21): استسلم الإمام فيصل بن تركي للقوات العثمانية خوفاً على حياته الشخصية.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (22): تمكن الإمام تركي بن عبد الله من النجاة والفرار أثناء حصار الدرعية.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (23): تبين الخريطة أن نفوذ الدولة السعودية الثانية وصل إلى سواحل الخليج العربي.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (24): ولد الملك عبد العزيز بن عبد الرحمن في الرياض عام ١٢٩٣هـ.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (25): اقتصرت خدمة الدولة السعودية للحرمين الشريفين على صناعة كسوة الكعبة المشرفة.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (26): استمرت الدولة السعودية الثانية بعد معركة المليداء لفترة طويلة.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (27): انتهت معركة المليداء عام ١٣٠٨هـ بانتصار الإمام عبد الرحمن بن فيصل.", a: "خطأ ✖", w: ["صح ✔"] },
+        { q: "صح أم خطأ (28): انتهت الدولة السعودية الثانية بعد معركة المليداء، ثم عادت الدولة السعودية مرة ثالثة على يد الملك عبد العزيز.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (29): من مظاهر نشر الأمن في الدولة السعودية تعيين أمراء في أنحاء الدولة لإقامة الأمن وإدارة شؤون المواطنين.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (30): بيت المال هو الجهة المسؤولة عن موارد الدولة ومصروفاتها.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (31): عُرف عن الإمام عبد الرحمن بن فيصل اطلاعه الواسع في الطب النبوي.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (32): تولى الإمام عبد الرحمن بن فيصل بن تركي الحكم بعد وفاة أخيه الإمام عبد الله في عام ١٣٠٧هـ.", a: "صح ✔", w: ["خطأ ✖"] },
+        { q: "صح أم خطأ (33): اقتصر التعليم في الدولة السعودية على العاصمة ولم يشمل باقي الأنحاء.", a: "خطأ ✖", w: ["صح ✔"] }
+    ];
+
+    // ========================================================
+    // 2. الصوتيات التفاعلية (Web Audio API)
+    // ========================================================
+    let soundOn = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSynth(freq, type, dur, delay = 0, vol = 0.14) {
+        if (!soundOn) return;
+        setTimeout(() => {
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + dur);
+            } catch (e) {}
+        }, delay);
+    }
+
+    function playWinCoinSound() {
+        playSynth(523.25, 'triangle', 0.11, 0);
+        playSynth(659.25, 'triangle', 0.11, 75);
+        playSynth(783.99, 'triangle', 0.14, 150);
+        playSynth(1046.5, 'sine', 0.28, 220, 0.18);
+    }
+
+    function playSadFrustrationSound() {
+        playSynth(311.13, 'sawtooth', 0.18, 0, 0.12);
+        playSynth(277.18, 'sawtooth', 0.18, 160, 0.12);
+        playSynth(233.08, 'sawtooth', 0.22, 320, 0.12);
+        playSynth(164.81, 'sawtooth', 0.42, 480, 0.15);
+    }
+
+    // ========================================================
+    // 3. إعدادات الرسومات HD والبرج النجدي والفارس
+    // ========================================================
+    const canvas = document.getElementById('hdCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let questionsList = [];
+    let qIndex = 0;
+    let currentRank = 0;
+    let goldCoins = 0;
+    let knightName = "فارس المجد";
+    let platforms = [];
+    let stars = [];
+    let sparkles = [];
+    let floatLabels = [];
+    let currentOptions = [];
+    let isPlaying = false;
+    let answerLocked = false;
+    let camY = 0;
+    let targetCamY = 0;
+    let animTick = 0;
+
+    let knight = {
+        x: 110, y: 460,
+        startX: 110, startY: 460,
+        targetX: 110, targetY: 460,
+        jumpT: 1,
+        sadFrames: 0
+    };
+
+    // توليد النجوم في السماء
+    for (let i = 0; i < 45; i++) {
+        stars.push({
+            x: Math.random() * 410,
+            y: Math.random() * 550,
+            r: Math.random() * 1.6 + 0.5,
+            phase: Math.random() * Math.PI * 2
+        });
+    }
+
+    function buildNajdiTower(total) {
+        platforms = [];
+        for (let i = 0; i <= total; i++) {
+            const isLeft = i % 2 === 0;
+            platforms.push({
+                rank: i,
+                x: isLeft ? 78 : 222,
+                y: 485 - (i * 68),
+                w: 110,
+                h: 44,
+                coinTaken: i === 0
+            });
+        }
+    }
+
+    function openStartModal() {
+        document.getElementById('leaderboardModal').style.display = 'none';
+        document.getElementById('startModal').style.display = 'flex';
+    }
+
+    function startNewGame() {
+        const inp = document.getElementById('studentNameInput').value.trim();
+        knightName = inp || "فارس المجد";
+
+        const mode = document.getElementById('modeSelect').value;
+        if (mode === 'mcq') {
+            questionsList = [...mcqBank];
+        } else if (mode === 'tf') {
+            questionsList = [...tfBank];
+        } else {
+            questionsList = [...mcqBank, ...tfBank];
+        }
+
+        buildNajdiTower(questionsList.length);
+        qIndex = 0;
+        currentRank = 0;
+        goldCoins = 0;
+        isPlaying = true;
+        answerLocked = false;
+
+        knight.x = platforms[0].x + 55;
+        knight.y = platforms[0].y;
+        knight.targetX = knight.x;
+        knight.targetY = knight.y;
+        knight.jumpT = 1;
+        knight.sadFrames = 0;
+
+        camY = 0;
+        targetCamY = 0;
+
+        document.getElementById('startModal').style.display = 'none';
+        document.getElementById('leaderboardModal').style.display = 'none';
+        document.getElementById('quizPanel').style.display = 'block';
+
+        updateHudDisplay();
+        renderCurrentQuestion();
+    }
+
+    function updateHudDisplay() {
+        document.getElementById('hudPlayerName').textContent = knightName;
+        document.getElementById('hudCoins').textContent = goldCoins;
+        document.getElementById('hudStep').textContent = `${currentRank} / ${questionsList.length}`;
+        const shownQ = Math.min(qIndex + 1, questionsList.length);
+        document.getElementById('hudQuestionNum').textContent = `${questionsList.length} / ${shownQ}`;
+        const pct = questionsList.length > 0 ? (qIndex / questionsList.length) * 100 : 0;
+        document.getElementById('progressBarFill').style.width = `${pct}%`;
+    }
+
+    function renderCurrentQuestion() {
+        if (qIndex >= questionsList.length) {
+            concludeGameSession();
+            return;
+        }
+
+        answerLocked = false;
+        const panel = document.getElementById('quizPanel');
+        panel.classList.remove('hidden-jump');
+
+        const item = questionsList[qIndex];
+        updateHudDisplay();
+
+        const isTF = item.w.length === 1;
+        document.getElementById('sectionBadge').textContent = isTF
+            ? "القسم الثاني: ضع علامة (صح) أو (خطأ)"
+            : "القسم الأول: اختر الإجابة الصحيحة";
+
+        document.getElementById('questionText').textContent = item.q;
+
+        if (isTF) {
+            currentOptions = [
+                { text: "صح ✔", isCorrect: item.a.includes("صح") },
+                { text: "خطأ ✖", isCorrect: item.a.includes("خطأ") }
+            ];
+        } else {
+            currentOptions = [
+                { text: item.a, isCorrect: true },
+                ...item.w.map(w => ({ text: w, isCorrect: false }))
+            ].sort(() => Math.random() - 0.5);
+        }
+
+        const grid = document.getElementById('choicesGrid');
+        grid.innerHTML = '';
+        currentOptions.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.id = `choiceBtn-${i}`;
+            btn.innerHTML = `<span class="choice-num">${i + 1}</span><span>${opt.text}</span>`;
+            btn.onclick = () => handleChoice(i);
+            grid.appendChild(btn);
+        });
+    }
+
+    function handleChoice(idx) {
+        if (!isPlaying || answerLocked || !currentOptions[idx]) return;
+        answerLocked = true;
+
+        const pickedBtn = document.getElementById(`choiceBtn-${idx}`);
+
+        if (currentOptions[idx].isCorrect) {
+            if (pickedBtn) pickedBtn.classList.add('correct-state');
+            playWinCoinSound();
+
+            currentRank++;
+            goldCoins += 100;
+            qIndex++;
+            updateHudDisplay();
+
+            // إخفاء نافذة السؤال مؤقتاً لمشاهدة قفزة الفارس بوضوح كما في الصورة
+            document.getElementById('quizPanel').classList.add('hidden-jump');
+
+            knight.startX = knight.x;
+            knight.startY = knight.y;
+            knight.targetX = platforms[currentRank].x + 55;
+            knight.targetY = platforms[currentRank].y;
+            knight.jumpT = 0;
+
+            targetCamY = Math.max(0, (currentRank - 2) * 68);
+        } else {
+            // إجابة خاطئة: صوت إحباط + إظهار الإجابة الصحيحة + البقاء في نفس المرتبة
+            if (pickedBtn) pickedBtn.classList.add('wrong-state');
+            currentOptions.forEach((opt, i) => {
+                if (opt.isCorrect) {
+                    const rightBtn = document.getElementById(`choiceBtn-${i}`);
+                    if (rightBtn) rightBtn.classList.add('correct-state');
+                }
+            });
+
+            playSadFrustrationSound();
+            knight.sadFrames = 55;
+            addFloatingLabel("✖ بقي في مرتبته (0 عملة)", knight.x - 45, knight.y - 60, "#f87171");
+
+            const wrap = document.getElementById('screenWrapper');
+            wrap.classList.remove('shake-screen');
+            void wrap.offsetWidth;
+            wrap.classList.add('shake-screen');
+
+            qIndex++;
+            setTimeout(() => {
+                renderCurrentQuestion();
+            }, 1250);
+        }
+    }
+
+    function concludeGameSession() {
+        isPlaying = false;
+        document.getElementById('quizPanel').style.display = 'none';
+        saveScoreToStorage();
+        toggleLeaderboardModal(true);
+    }
+
+    function saveScoreToStorage() {
+        let records = JSON.parse(localStorage.getItem('najdiTowerHD_LB') || '[]');
+        records.push({
+            name: knightName,
+            rank: currentRank,
+            total: questionsList.length,
+            coins: goldCoins
+        });
+        records.sort((a, b) => b.rank - a.rank || b.coins - a.coins);
+        records = records.slice(0, 20);
+        localStorage.setItem('najdiTowerHD_LB', JSON.stringify(records));
+    }
+
+    function toggleLeaderboardModal(fromEnd = false) {
+        const modal = document.getElementById('leaderboardModal');
+        const records = JSON.parse(localStorage.getItem('najdiTowerHD_LB') || '[]');
+        const container = document.getElementById('lbListContainer');
+
+        if (fromEnd) {
+            document.getElementById('endMainTitle').textContent = `المرتبة ${currentRank} • ${goldCoins} عملة 🪙`;
+            document.getElementById('endSummaryText').textContent =
+                `أنهى الفارس (${knightName}) التحدي بوصوله إلى المرتبة ${currentRank} من ${questionsList.length}`;
+        }
+
+        if (records.length === 0) {
+            container.innerHTML = '<div style="padding:14px; color:#94a3b8;">لا توجد نتائج مسجلة بعد</div>';
+        } else {
+            container.innerHTML = records.map((r, i) => `
+                <div class="lb-item">
+                    <span>${i + 1}. ${r.name}</span>
+                    <span>المرتبة: ${r.rank}/${r.total} • 🪙 ${r.coins}</span>
+                </div>
+            `).join('');
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeLeaderboardModal() {
+        document.getElementById('leaderboardModal').style.display = 'none';
+    }
+
+    function toggleSound() {
+        soundOn = !soundOn;
+        document.getElementById('soundToggleBtn').textContent = soundOn ? '🔊' : '🔇';
+    }
+
+    function toggleQuizVisibility() {
+        const panel = document.getElementById('quizPanel');
+        if (!isPlaying) return;
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addSparkles(x, y) {
+        for (let i = 0; i < 18; i++) {
+            sparkles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.8) * 5,
+                size: Math.random() * 4 + 2,
+                life: 28
+            });
+        }
+    }
+
+    function addFloatingLabel(text, x, y, color) {
+        floatLabels.push({ text, x, y, color, life: 45 });
+    }
+
+    // ========================================================
+    // 4. محرك الرسم عالي الدقة (HD Najdi Graphics Engine)
+    // ========================================================
+    function renderLoop() {
+        animTick += 0.06;
+        camY += (targetCamY - camY) * 0.1;
+
+        // تحديث قفزة الفارس
+        if (knight.jumpT < 1) {
+            knight.jumpT += 0.045;
+            if (knight.jumpT >= 1) {
+                knight.jumpT = 1;
+                knight.x = knight.targetX;
+                knight.y = knight.targetY;
+                if (platforms[currentRank]) {
+                    platforms[currentRank].coinTaken = true;
+                }
+                addSparkles(knight.x, knight.y - 25);
+                addFloatingLabel("+100 ذهب ★", knight.x - 28, knight.y - 55, "#fde047");
+                renderCurrentQuestion();
+            } else {
+                const t = knight.jumpT;
+                knight.x = knight.startX + (knight.targetX - knight.startX) * t;
+                const arc = Math.sin(t * Math.PI) * 58;
+                knight.y = (knight.startY + (knight.targetY - knight.startY) * t) - arc;
+            }
+        }
+
+        if (knight.sadFrames > 0) knight.sadFrames--;
+
+        // 1. خلفية السماء الليلية والغسق الذهبي (مطابقة للصورة)
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, 550);
+        skyGrad.addColorStop(0, '#0b1329');
+        skyGrad.addColorStop(0.55, '#1e1b2e');
+        skyGrad.addColorStop(1, '#45271d');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, 410, 550);
+
+        // 2. رسم النجوم المتلألئة
+        stars.forEach(s => {
+            const alpha = 0.35 + Math.sin(animTick + s.phase) * 0.35;
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(s.x, (s.y + camY * 0.15) % 550, s.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // 3. رسم الهلال المضيء
+        ctx.save();
+        ctx.fillStyle = '#fef08a';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(295, 115, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#131629';
+        ctx.beginPath();
+        ctx.arc(286, 110, 19, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // 4. قلعة الدرعية / قصر سلوى في الخلفية مع الشرفات المثلثة والنوافذ المضيئة
+        const fortressY = 310 + (camY * 0.18) % 240;
+        ctx.fillStyle = '#291c14';
+        ctx.fillRect(28, fortressY, 354, 300);
+
+        // شرفات القصر في الخلفية
+        ctx.fillStyle = '#291c14';
+        for (let x = 28; x < 375; x += 16) {
+            ctx.beginPath();
+            ctx.moveTo(x, fortressY);
+            ctx.lineTo(x + 8, fortressY - 12);
+            ctx.lineTo(x + 16, fortressY);
+            ctx.fill();
+        }
+
+        // نوافذ القصر المضيئة باللون الذهبي
+        ctx.fillStyle = '#f59e0b';
+        for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 6; col++) {
+                ctx.fillRect(65 + col * 36, fortressY + 25 + row * 32, 6, 12);
+            }
+        }
+
+        // 5. الأعمدة الطينية الجانبية للبرج
+        const wallGradL = ctx.createLinearGradient(0, 0, 26, 0);
+        wallGradL.addColorStop(0, '#5c2d16');
+        wallGradL.addColorStop(1, '#7c3a1d');
+        ctx.fillStyle = wallGradL;
+        ctx.fillRect(0, 0, 26, 550);
+        ctx.fillRect(384, 0, 26, 550);
+
+        // زخارف الأعمدة الجانبية
+        ctx.fillStyle = '#a16207';
+        const brickOffset = Math.floor(camY) % 28;
+        for (let y = -28; y < 560; y += 28) {
+            ctx.fillRect(6, y + brickOffset, 14, 3);
+            ctx.fillRect(390, y + brickOffset, 14, 3);
+        }
+
+        ctx.save();
+        ctx.translate(0, camY);
+
+        // 6. رسم منصات البرج التراثية (مطابقة تماماً للصورة)
+        platforms.forEach(p => {
+            if (p.y + camY < -90 || p.y + camY > 620) return;
+
+            // جسم المنصة الطيني المتدرج بالحواف الدائرية
+            const pGrad = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.h);
+            pGrad.addColorStop(0, '#b45309');
+            pGrad.addColorStop(1, '#78350f');
+            ctx.fillStyle = pGrad;
+
+            ctx.beginPath();
+            ctx.roundRect(p.x, p.y, p.w, p.h, [0, 0, 10, 10]);
+            ctx.fill();
+            ctx.strokeStyle = '#451a03';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // الشريط الجبسي الأبيض العلوي مع الشرفات النجدية المسننة
+            ctx.fillStyle = '#fef3c7';
+            ctx.fillRect(p.x, p.y - 3, p.w, 4);
+            for (let sx = p.x; sx < p.x + p.w - 6; sx += 9) {
+                ctx.beginPath();
+                ctx.moveTo(sx, p.y - 3);
+                ctx.lineTo(sx + 4.5, p.y - 9);
+                ctx.lineTo(sx + 9, p.y - 3);
+                ctx.fill();
+            }
+
+            // شارة رقم المرتبة الخضراء في وسط المنصة
+            ctx.fillStyle = '#064e3b';
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.roundRect(p.x + 25, p.y + 8, 60, 18, 5);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ecfdf5';
+            ctx.font = 'bold 11px Tajawal, Tahoma';
+            ctx.textAlign = 'center';
+            ctx.fillText(`مرتبة ${p.rank}`, p.x + 55, p.y + 21);
+
+            // فتحات الفرجات المثلثة السوداء أسفل الشارة
+            ctx.fillStyle = '#271206';
+            ctx.beginPath();
+            ctx.moveTo(p.x + 43, p.y + 30);
+            ctx.lineTo(p.x + 38, p.y + 38);
+            ctx.lineTo(p.x + 48, p.y + 38);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(p.x + 67, p.y + 30);
+            ctx.lineTo(p.x + 62, p.y + 38);
+            ctx.lineTo(p.x + 72, p.y + 38);
+            ctx.fill();
+
+            // رسم العملة الذهبية المتوهجة فوق كل مرتبة
+            if (!p.coinTaken) {
+                const floatY = p.y - 28 + Math.sin(animTick * 1.5 + p.rank) * 3;
+                const scaleX = Math.abs(Math.cos(animTick + p.rank * 0.5)) * 0.7 + 0.3;
+
+                ctx.save();
+                ctx.translate(p.x + 55, floatY);
+
+                // هالة التوهج الذهبي
+                const glow = ctx.createRadialGradient(0, 0, 2, 0, 0, 18);
+                glow.addColorStop(0, 'rgba(253, 224, 71, 0.9)');
+                glow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(0, 0, 18, 0, Math.PI * 2);
+                ctx.fill();
+
+                // قرص العملة الدوار
+                ctx.scale(scaleX, 1);
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath();
+                ctx.arc(0, 0, 10, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#b45309';
+                ctx.stroke();
+
+                ctx.fillStyle = '#92400e';
+                ctx.font = 'bold 10px Tahoma';
+                ctx.textAlign = 'center';
+                ctx.fillText('★', 0, 3.5);
+                ctx.restore();
+            }
+        });
+
+        // 7. رسم الفارس السعودي حامل سيف الأجرب
+        drawSaudiKnight(knight.x, knight.y - 4);
+
+        // 8. رسم الشرارات الذهبية
+        sparkles.forEach((sp, i) => {
+            sp.x += sp.vx;
+            sp.y += sp.vy;
+            sp.life--;
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath();
+            ctx.arc(sp.x, sp.y, sp.size * (sp.life / 28), 0, Math.PI * 2);
+            ctx.fill();
+            if (sp.life <= 0) sparkles.splice(i, 1);
+        });
+
+        // 9. النصوص العائمة
+        floatLabels.forEach((fl, i) => {
+            fl.y -= 0.7;
+            fl.life--;
+            ctx.fillStyle = fl.color;
+            ctx.font = 'bold 12px Tajawal, Tahoma';
+            ctx.textAlign = 'center';
+            ctx.fillText(fl.text, fl.x + 35, fl.y);
+            if (fl.life <= 0) floatLabels.splice(i, 1);
+        });
+
+        ctx.restore();
+        requestAnimationFrame(renderLoop);
+    }
+
+    function drawSaudiKnight(x, y) {
+        ctx.save();
+        const breathe = Math.sin(animTick * 2) * 1.2;
+        ctx.translate(x, y + breathe);
+
+        // السيف المرفوع (سيف الأجرب)
+        ctx.save();
+        ctx.translate(-12, -24);
+        ctx.rotate(knight.sadFrames > 0 ? 0.6 : -0.55);
+        // مقبض السيف الذهبي
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(-3, -2, 6, 3);
+        // نصل السيف الفضي اللامع
+        ctx.fillStyle = '#f8fafc';
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.moveTo(-1.5, -2);
+        ctx.lineTo(-1, -24);
+        ctx.lineTo(1.5, -26);
+        ctx.lineTo(1.5, -2);
+        ctx.fill();
+        ctx.restore();
+
+        // البشت التراثي البني المذهب
+        ctx.fillStyle = knight.sadFrames > 0 ? '#475569' : '#451a03';
+        ctx.beginPath();
+        ctx.moveTo(-11, -30);
+        ctx.lineTo(11, -30);
+        ctx.lineTo(14, 0);
+        ctx.lineTo(-14, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        // الثوب الأبيض في الوسط
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-6, -29, 12, 29);
+
+        // تطريز الزري الذهبي على البشت
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(-6, -29);
+        ctx.lineTo(-6, -10);
+        ctx.moveTo(6, -29);
+        ctx.lineTo(6, -10);
+        ctx.stroke();
+
+        // الرأس والوجه
+        ctx.fillStyle = '#fed7aa';
+        ctx.fillRect(-6, -41, 12, 11);
+
+        // اللحية والملامح
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(-5, -34, 10, 3);
+
+        // الغترة البيضاء والعقال الأسود
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-8, -45, 16, 6);
+        ctx.fillRect(6, -42, 4, 14);
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(-7, -45, 14, 3);
+
+        ctx.restore();
+    }
+
+    // اختصارات لوحة المفاتيح (1 - 2 - 3 - 4)
+    window.addEventListener('keydown', (e) => {
+        if (document.activeElement.tagName === 'INPUT') return;
+        if (['1', '2', '3', '4'].includes(e.key)) {
+            handleChoice(parseInt(e.key) - 1);
+        }
+    });
+
+    buildNajdiTower(66);
+    requestAnimationFrame(renderLoop);
+</script>
+
+</body>
+</html>
